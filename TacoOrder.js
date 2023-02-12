@@ -320,7 +320,7 @@ module.exports = class TacoOrder extends Order{
                 //     aReturn.push("(no drinks selected)");
                 // }
                 else{
-                    aReturn.push ( ` and with drink -${this.sDrinks}`);
+                    aReturn.push ( `(no drink selected)`);
                 }
                  
                 
