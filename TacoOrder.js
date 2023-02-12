@@ -300,13 +300,31 @@ module.exports = class TacoOrder extends Order{
 
 
                 // drink item output print
-                if(this.sDrinks == "no" || this.sDrinks=="NO" || this.sDrinks=="No" || this.sDrinks=="nO"){
-                    aReturn.push("(no drinks selected)");
-                }
+                if(this.sDrinks=='c' || this.sDrinks=='C'){
+                    this.sDrinks="Coke";
+                    aReturn.push(`with drink- ${this.sDrinks} `);
+                    }
+                    else if(this.sDrinks=='s' || this.sDrinks=='S')
+                    {
+                    this.sDrinks="Sprite";
+                      aReturn.push(`with drink- ${this.sDrinks} `);
+                    }
+                    else if(this.sDrinks=='f' || this.sDrinks=='F')
+                    {
+                    this.sDrinks="Fanta" ;
+                    aReturn.push(`with drink- ${this.sDrinks} `);
+                    }    
+
+
+                // if(this.sDrinks == "no" || this.sDrinks=="NO" || this.sDrinks=="No" || this.sDrinks=="nO"){
+                //     aReturn.push("(no drinks selected)");
+                // }
                 else{
                     aReturn.push ( ` and with drink -${this.sDrinks}`);
                 }
-
+                 
+                
+                //
                 this.nOrder= this.price;
                 aReturn.push(`Please pay for your order here`);
                 aReturn.push(`${this.sUrl}/payment/${this.sNumber}/`);
@@ -351,7 +369,7 @@ module.exports = class TacoOrder extends Order{
       <body>
         <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
         <script
-          src="https://www.paypal.com/sdk/js?client-id=${sClientID}"> // Required. Replace SB_CLIENT_ID with your sandbox client ID.
+          src="https://www.paypal.com/sdk/js?client-id=${sClientID}"> 
         </script>
         Thank you  ${this.sName},contact-${this.sPhone} for your ${this.sItem} order of $${this.nOrder}.
         <div id="paypal-button-container"></div>
