@@ -7,6 +7,7 @@ const OrderState = Object.freeze({
   VEG: Symbol("veg"),
   NONVEG: Symbol("nonveg"),
   SIDE: Symbol("side"),
+  BURGER: Symbol("burger"),
   DIPPING:Symbol("dipping"),
   OPTION: Symbol("option"),
   VEGSIZE: Symbol("Vegsize"),
@@ -24,6 +25,7 @@ module.exports = class TacoOrder extends Order{
         this.sPhone="";
         this.sSize = "";
         this.sSide="";
+        this.sburger="";
         this.sDipping = "";
         this.sDrinks = "";
         this.sOption="";
@@ -148,7 +150,7 @@ module.exports = class TacoOrder extends Order{
                  
                     //Side case   
                 case OrderState.SIDE:
-                    this.stateCur= OrderState.DIPPING
+                    this.stateCur= OrderState.BURGER
                     this.sSide=sInput;
                     if(this.sSide =="f" || this.sSide== "F"){
                         this.price= this.price + 5;
@@ -168,16 +170,40 @@ module.exports = class TacoOrder extends Order{
                         aReturn.push("INVALID INPUT!! PRESS 'F' or 'P' or 'O' or 'NO'  ");
                         break;
                          }
-                    aReturn.push("Add any dipping for $1 ");
-                    aReturn.push(" Dippings availaible - Mayo, Ranch, Chipotle ");
-                    aReturn.push(" Press 'M' for mayo, 'R' for ranch, 'C' for chipotle ");
+                    aReturn.push("Do you want to have burger? ");
+                    aReturn.push(" Chicken Burger=$6 , Aloo patty Burger=$4  ");
+                    aReturn.push(" Press 'A' for aloo patty burger, 'C' for chicken burger ");
                     aReturn.push("Press 'No' if you do not want any dipping ");
 
                    break;
 
+                    //  item burger
+            case OrderState.BURGER:
+                    this.stateCur = OrderState.DIPPING
+                            this.sburger= sInput;
+                                if(this.sburger =="c" || this.sburger== "C"){
+                                    this.price= this.price + 6;
+                                }
+                                else if(this.sburger =="a" || this.sburger== "A"){
+                                    this.price= this.price + 4;
+                                }
+                                else if(this.sburger =="no" || this.sburger == "NO" || this.sburger == "No" || this.sburger == "nO" ){
+                                    this.price= this.price + 0;
+                                }
+                                else{
+                                    this.stateCur=OrderState.BURGER;
+                                    this.sburger=sInput;
+                                    aReturn.push("INVALID INPUT!! PRESS 'A' or 'C' or 'NO'  ");
+                                    break;
+                                    }     
+                                    aReturn.push("Add any dipping for $1 ");
+                                    aReturn.push(" Press 'M' for mayo, 'R' for ranch, 'C' for chipotle dippings ");
+                                    aReturn.push("Press 'No' if you do not want any dipping ");
+                                     break;     
+                
 
 
-                    //toppings case
+                //dipping case
                  case OrderState.DIPPING:
                 this.stateCur = OrderState.DRINKS
                 this.sDipping = sInput;
@@ -298,6 +324,23 @@ module.exports = class TacoOrder extends Order{
                     aReturn.push(`${this.sSide} `);
                     }
 
+                //burger item output print
+                if(this.sburger=='a' || this.sSide=='A'){
+                    this.sburger="Aloo patty burger";
+                    aReturn.push(`with - ${this.sburger} `);
+                    }
+                    else if(this.sburger=='c' || this.sburger=='C')
+                    {
+                    this.sburger="Chicken burger";
+                      aReturn.push(`with - ${this.sburger} `);
+                    }
+    
+                    else{
+                        this.sburger="(no burger selected) ";
+                        aReturn.push(`${this.sburger} `);
+                        }
+
+
 
                 // drink item output print
                 if(this.sDrinks=='c' || this.sDrinks=='C'){
@@ -316,9 +359,7 @@ module.exports = class TacoOrder extends Order{
                     }    
 
 
-                // if(this.sDrinks == "no" || this.sDrinks=="NO" || this.sDrinks=="No" || this.sDrinks=="nO"){
-                //     aReturn.push("(no drinks selected)");
-                // }
+              
                 else{
                     aReturn.push ( `(no drink selected)`);
                 }
@@ -326,24 +367,18 @@ module.exports = class TacoOrder extends Order{
                 
                 //
                 this.nOrder= this.price;
+                aReturn.push(`Total amount is $${this.nOrder} `);
                 aReturn.push(`Please pay for your order here`);
                 aReturn.push(`${this.sUrl}/payment/${this.sNumber}/`);
                 this.stateCur = OrderState.PAYMENT;
                 break;
-
-                // aReturn.push(`contact-${this.sPhone} `);
-                // aReturn.push(`Total amount is $ ${this.price}`);
-                // let d = new Date(); 
-                // d.setMinutes(d.getMinutes() + 20);
-                // aReturn.push(`Please pick it up at ${d.toTimeString()}`);
-                // this.stateCur=OrderState.WELCOMING;
-                // break;
-            
+     
+                //payment case
                 case OrderState.PAYMENT:
                 console.log(sInput);
                 this.isDone(true);
                 let d = new Date();
-                d.setMinutes(d.getMinutes() + 20);
+                d.setMinutes(d.getMinutes() + 21);
                 aReturn.push(`Your order will be delivered at ${d.toTimeString()}`);
                 break;
         }
